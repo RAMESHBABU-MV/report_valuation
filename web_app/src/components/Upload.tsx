@@ -1,5 +1,8 @@
 import { useState } from 'react';
+<<<<<<< HEAD
 import { useAppStore } from '../store/useAppStore';
+=======
+>>>>>>> upstream/main
 import StepIndicator from './upload/StepIndicator';
 import ProjectNameStep from './upload/ProjectNameStep';
 import UploadStep from './upload/UploadStep';
@@ -7,13 +10,21 @@ import FileSelectionStep from './upload/FileSelectionStep';
 import ProcessingStep from './upload/ProcessingStep';
 import CompletionStep from './upload/CompletionStep';
 import { UploadedFile, ProjectReport } from './upload/types';
+<<<<<<< HEAD
 import { createInitialMetadata, createReportObject, generateId } from './upload/uploadHelpers';
+=======
+import { useCreateReport } from '../hooks/useReports';
+import { useProcessMultipleDocuments } from '../hooks/useDocuments';
+import { reportsApi } from '../apis/report.api';
+>>>>>>> upstream/main
 
 export default function Upload() {
   const [currentStep, setCurrentStep] = useState(1);
   const [projectName, setProjectName] = useState('');
+  const [bankName, setBankName] = useState('');
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
+<<<<<<< HEAD
 
   const [recentProjects, setRecentProjects] = useState<ProjectReport[]>([
     {
@@ -83,13 +94,108 @@ export default function Upload() {
     setFiles([]);
     setSelectedFiles([]);
     setCurrentStep(1);
+=======
+  const [analysisResult, setAnalysisResult] = useState<string | null>(null);
+
+
+  const [recentProjects] = useState<ProjectReport[]>([]);
+  const [reportId, setReportId] = useState<string | null>(null);
+  const createReportMutation = useCreateReport();
+  const processMultipleMutation = useProcessMultipleDocuments();
+
+
+  const handleCreateReport = async () => {
+    try {
+      const response = await createReportMutation.mutateAsync({
+        name: projectName,
+        bank_name: bankName,
+      });
+
+      const createdReport = 'id' in response ? response : (response as any).reports?.[0];
+
+      if (createdReport?.id) {
+        setReportId(createdReport.id);
+        setCurrentStep(2);
+      } else {
+        throw new Error("Report ID not found in response");
+      }
+    } catch (err) {
+      console.error('Failed to create report', err);
+      alert('Failed to create report. Try another name.');
+    }
   };
 
-  const startNewProject = () => {
+  const handleImportAndAnalyze = async () => {
+    if (selectedFiles.length === 0) return;
+    if (!reportId) {
+      alert("Report ID is missing. Please restart.");
+      return;
+    }
+
+    setCurrentStep(4);
+
+    try {
+      const filesToUpload = files
+        .filter(f => selectedFiles.includes(f.id))
+        .map(f => f.file);
+
+      if (filesToUpload.length === 0) {
+        throw new Error("No files selected for upload.");
+      }
+
+      setFiles(prev => prev.map(f =>
+        selectedFiles.includes(f.id) ? { ...f, status: 'processing', progress: 10 } : f
+      ));
+
+      // Import Data (Process Files)
+      await processMultipleMutation.mutateAsync({
+        files: filesToUpload,
+        clientName: projectName,
+        reportId: reportId
+      });
+
+      setFiles(prev => prev.map(f =>
+        selectedFiles.includes(f.id) ? { ...f, status: 'completed', progress: 100 } : f
+      ));
+
+      // Trigger Analysis
+      const analysisResponse = await reportsApi.analyzeReport(reportId);
+      if (analysisResponse && analysisResponse.analysis) {
+        setAnalysisResult(analysisResponse.analysis);
+      }
+
+      setCurrentStep(5);
+
+    } catch (error) {
+      console.error("Error in import/analyze flow:", error);
+      alert("An error occurred during processing. Please try again.");
+      setFiles(prev => prev.map(f =>
+        selectedFiles.includes(f.id) ? { ...f, status: 'error', progress: 0 } : f
+      ));
+      setCurrentStep(3);
+    } finally {
+      // Finished
+    }
+  };
+
+  const handleFinish = () => {
+    // Reset
     setProjectName('');
+    setBankName('');
     setFiles([]);
     setSelectedFiles([]);
+    setAnalysisResult(null);
     setCurrentStep(1);
+  };
+
+  const handleCreateProject = () => {
+    handleFinish();
+>>>>>>> upstream/main
+  };
+
+
+  const startNewProject = () => {
+    handleFinish();
   };
 
   return (
@@ -106,7 +212,13 @@ export default function Upload() {
           <ProjectNameStep
             projectName={projectName}
             setProjectName={setProjectName}
+<<<<<<< HEAD
             onNext={() => setCurrentStep(2)}
+=======
+            bankName={bankName}
+            setBankName={setBankName}
+            onNext={handleCreateReport}
+>>>>>>> upstream/main
             recentProjects={recentProjects}
           />
         )}
@@ -155,6 +267,10 @@ export default function Upload() {
           <CompletionStep
             files={files}
             selectedFiles={selectedFiles}
+<<<<<<< HEAD
+=======
+            analysisResult={analysisResult}
+>>>>>>> upstream/main
             onSave={handleCreateProject}
             onRestart={startNewProject}
           />

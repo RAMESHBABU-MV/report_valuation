@@ -1,7 +1,11 @@
 export interface UploadedFile {
     id: string;
     file: File;
+<<<<<<< HEAD
     status: 'pending' | 'processing' | 'completed';
+=======
+    status: 'pending' | 'processing' | 'completed' | 'error';
+>>>>>>> upstream/main
     progress: number;
     uploadDate: Date;
     fileSize: string;

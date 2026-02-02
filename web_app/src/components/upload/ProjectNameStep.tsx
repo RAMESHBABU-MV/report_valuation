@@ -1,9 +1,18 @@
+<<<<<<< HEAD
 import { FolderOpen, ArrowRight } from 'lucide-react';
+=======
+import { FolderOpen, ArrowRight, Building2 } from 'lucide-react';
+>>>>>>> upstream/main
 import { ProjectReport } from './types';
 
 interface ProjectNameStepProps {
     projectName: string;
     setProjectName: (name: string) => void;
+<<<<<<< HEAD
+=======
+    bankName: string;
+    setBankName: (name: string) => void;
+>>>>>>> upstream/main
     onNext: () => void;
     recentProjects: ProjectReport[];
 }
@@ -11,11 +20,20 @@ interface ProjectNameStepProps {
 export default function ProjectNameStep({
     projectName,
     setProjectName,
+<<<<<<< HEAD
+=======
+    bankName,
+    setBankName,
+>>>>>>> upstream/main
     onNext,
     recentProjects
 }: ProjectNameStepProps) {
     const handleProjectNameSubmit = () => {
+<<<<<<< HEAD
         if (projectName.trim()) {
+=======
+        if (projectName.trim() && bankName.trim()) {
+>>>>>>> upstream/main
             onNext();
         }
     };
@@ -34,6 +52,7 @@ export default function ProjectNameStep({
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <FolderOpen size={32} className="text-blue-600" />
                 </div>
+<<<<<<< HEAD
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">Create New Project</h2>
                 <p className="text-gray-600">Enter a name for your document analysis project</p>
             </div>
@@ -41,6 +60,32 @@ export default function ProjectNameStep({
             <div className="space-y-4">
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Project Name *</label>
+=======
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Create New Report</h2>
+                <p className="text-gray-600">Enter details for your document analysis report</p>
+            </div>
+
+            <div className="space-y-6">
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Bank Name *</label>
+                    <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <Building2 size={20} className="text-gray-400" />
+                        </div>
+                        <input
+                            type="text"
+                            value={bankName}
+                            onChange={(e) => setBankName(e.target.value)}
+                            placeholder="e.g., HDFC Bank, SBI"
+                            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-lg"
+                            autoFocus
+                        />
+                    </div>
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Report Name *</label>
+>>>>>>> upstream/main
                     <input
                         type="text"
                         value={projectName}
@@ -48,13 +93,20 @@ export default function ProjectNameStep({
                         onKeyPress={(e) => e.key === 'Enter' && handleProjectNameSubmit()}
                         placeholder="e.g., Tamil Land Documents - January 2024"
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-lg"
+<<<<<<< HEAD
                         autoFocus
+=======
+>>>>>>> upstream/main
                     />
                 </div>
 
                 <button
                     onClick={handleProjectNameSubmit}
+<<<<<<< HEAD
                     disabled={!projectName.trim()}
+=======
+                    disabled={!projectName.trim() || !bankName.trim()}
+>>>>>>> upstream/main
                     className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-6 py-4 rounded-lg font-semibold text-lg flex items-center justify-center gap-2 transition-colors"
                 >
                     Continue to Upload
@@ -64,7 +116,11 @@ export default function ProjectNameStep({
 
             {recentProjects.length > 0 && (
                 <div className="mt-8 pt-8 border-t border-gray-200">
+<<<<<<< HEAD
                     <h3 className="text-sm font-medium text-gray-700 mb-4">Recent Projects</h3>
+=======
+                    <h3 className="text-sm font-medium text-gray-700 mb-4">Recent Reports</h3>
+>>>>>>> upstream/main
                     <div className="space-y-2">
                         {recentProjects.slice(0, 3).map((project) => (
                             <div
